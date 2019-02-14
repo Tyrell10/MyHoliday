@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
-#include <QTcpServer>
+#include <QAbstractSocket>
+#include <QObject>
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -15,24 +17,23 @@ class MainWindow : public QMainWindow
 
 public:
   explicit MainWindow(QWidget *parent = 0);
-  enum {CONNECT, DISCONNECT};
-  bool status;
   ~MainWindow();
 
 public slots:
-  void newConnection();
-  void readData();
+  void connected();
   void disconnect();
+  void readyRead();
+  void displayError(QAbstractSocket::SocketError socketError);
 
 private slots:
+  void on_Connect_clicked();
+
   void on_Send_clicked();
-  void on_Btn_Start_clicked();
 
 private:
   Ui::MainWindow *ui;
-  QTcpServer *server;
-  QTcpSocket *socket;
-  QHostAddress IP;
+  QTcpSocket *tcpSocket;
+  QString IP;
   quint16 Port;
 };
 

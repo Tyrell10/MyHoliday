@@ -8,18 +8,14 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
   server = new QTcpServer(this);
 
+  ui->IP->setText("127.0.0.1");
+  ui->Port->setText("12345");
+
+  status = DISCONNECT;
+  ui->KotakPesan->setReadOnly(true);
+
   connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
   connect(ui->Pesan, SIGNAL(returnPressed()), this, SLOT(on_Send_clicked()));
-
-
-  if(!server->listen(QHostAddress::LocalHost, 1234)){
-    ui->TextServer->setPlainText("Server Not Connected");
-    ui->TextServer->append("Error : " + server->errorString());
-  }
-  else {
-    ui->TextServer->setPlainText("Connecting...");
-  }
-
 }
 
 MainWindow::~MainWindow()
@@ -31,20 +27,60 @@ MainWindow::~MainWindow()
 
 void MainWindow::newConnection(){
   while(server->hasPendingConnections()){
-      socket = server->nextPendingConnection();
-      ui->TextServer->setPlainText("Connected");
+      socket = server->nextPendingConnection(); //to accept the pending connection as a connected QTcpSocket
 
-      socket->write("Hello Client \r\n");
+      ui->KotakPesan->setPlainText("Connected \n");
+      connect(socket, SIGNAL(readyRead()), this, SLOT(readData()));
+      connect(socket, SIGNAL(disconnected()), this, SLOT(disconnect()));
+
+      socket->write("Hello Client");
       socket->flush();
 
-      socket->waitForBytesWritten(3000);
-      socket->waitForReadyRead(5000);
+      //socket->waitForBytesWritten(3000);  //suggest for non-GUI app
+      //socket->waitForReadyRead(5000);  //suggest for non-GUI app
   }
 }
 
-void MainWindow::on_Send_clicked()
-{
-  socket->write(ui->Pesan->text().toLatin1()+"\n");
+void MainWindow::on_Send_clicked(){
+  socket->write(ui->Pesan->text().toLatin1());
   socket->flush();
+
   ui->Pesan->clear();
+}
+
+void MainWindow::readData(){
+  ui->KotakPesan->append("Client : " + socket->readAll());
+}
+
+void MainWindow::on_Btn_Start_clicked(){
+  IP = ui->IP->text();
+  Port = ui->Port->text().toInt();
+
+  if(ui->Btn_Start->text()== "Start" && status == DISCONNECT){
+    if(!server->listen(IP, Port)){
+       ui->KotakPesan->setPlainText("Server Not Connected");
+       ui->KotakPesan->append("Error : " + server->errorString());
+    }
+    else {
+      ui->KotakPesan->setPlainText("Connecting...");
+      ui->Btn_Start->setText("Stop");
+
+      status = CONNECT;
+    }
+  }
+  else if(ui->Btn_Start->text()== "Stop" && status == CONNECT){
+    socket->disconnectFromHost();
+    ui->Btn_Start->setText("Start");
+
+    status = DISCONNECT;
+  }
+}
+
+void MainWindow::disconnect(){
+  status = DISCONNECT;
+  server->close();
+  if(ui->Btn_Start->text() == "Stop")
+    ui->Btn_Start->setText("Start");
+
+  ui->KotakPesan->append("Disconnected");
 }

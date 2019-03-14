@@ -3,8 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
-  ui(new Ui::MainWindow)
-{
+  ui(new Ui::MainWindow){
   ui->setupUi(this);
   udpSocket = new QUdpSocket(this); // create a new QUdpSocket
 
@@ -12,14 +11,35 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->KotakPesan->setReadOnly(true);
   ui->KotakPesan->setPlainText("Connecting...");
+  // Add Port Number
+  QStringList Port_List;
+  Port_List.append("1234");
+  Port_List.append("1233");
+  Port_List.append("1232");
+  Port_List.append("1231");
+
+  ui->Port->addItems(Port_List);
+
+  //Manual Signal to Slot
+  /*QObject::connect(ui->Port, &QComboBox::currentTextChanged, [&]{
+    if(ui->Port->currentText()=="1234")
+      Port = 1234;
+    else if(ui->Port->currentText()=="1233")
+      Port = 1233;
+    else if(ui->Port->currentText()=="1232")
+      Port = 1232;
+    else if(ui->Port->currentText()=="1231")
+      Port = 1231;
+  });
+  */
 
   connect(ui->Pesan, SIGNAL(returnPressed()), this, SLOT(on_Send_clicked()));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
   delete ui;
-  udpSocket->leaveMulticastGroup(IP);
+  if(udpSocket->state() == QUdpSocket::BoundState)
+    udpSocket->leaveMulticastGroup(IP);
   udpSocket->close();
 }
 
@@ -40,10 +60,10 @@ void MainWindow::Socket(){
 
 void MainWindow::on_Connect_clicked(){
   IP = ui->IP->text();
-  Port = ui->Port->text().toInt();
+  //Port = ui->Port->text().toInt();
 
   //udpSocket->bind(IP,Port);
-  udpSocket->bind(QHostAddress(QHostAddress::AnyIPv4), Port, QAbstractSocket::ShareAddress);
+  udpSocket->bind(QHostAddress(QHostAddress::AnyIPv4), Port, QAbstractSocket::ShareAddress | QAbstractSocket::ReuseAddressHint);
   udpSocket->joinMulticastGroup(IP);
 
   ui->KotakPesan->setPlainText("Connected");
@@ -55,4 +75,15 @@ void MainWindow::on_Connect_clicked(){
 void MainWindow::on_Send_clicked(){
   udpSocket->writeDatagram(ui->Pesan->text().toLatin1(), IP, Port);
   ui->Pesan->clear();
+}
+
+void MainWindow::on_Port_currentTextChanged(){
+  if(ui->Port->currentText()=="1234")
+    Port = 1234;
+  else if(ui->Port->currentText()=="1233")
+    Port = 1233;
+  else if(ui->Port->currentText()=="1232")
+    Port = 1232;
+  else if(ui->Port->currentText()=="1231")
+    Port = 1231;
 }

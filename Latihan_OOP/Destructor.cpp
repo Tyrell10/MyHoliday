@@ -30,9 +30,11 @@ void Human::Display(){
 }
 
 int main(){
-    Human *Tyrell = new Human("Tyrell",18);
-    Tyrell->Display();
+    Human Tyrell("Tyrell",18);
+    Tyrell.Display();
+    /*Human *Tyrell = new Human("Tyrell",18);
+    Tyrell->Display(); */
 
-    delete Tyrell;
+    //delete Tyrell;
     return 0;
 }

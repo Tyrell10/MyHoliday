@@ -1,0 +1,4 @@
+<launch>
+  <node name="publisher_node" pkg="GUI" type="demo_latihan_publisher" output="screen"/>
+  <node name="subscriber_node" pkg="GUI" type="demo_latihan_subscriber" output="screen"/>
+</launch>

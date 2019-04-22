@@ -3,12 +3,12 @@
 /*TcpTest::TcpTest(QObject *parent) : QObject(parent)
 {
     tcpSocket = new QTcpSocket(this);
-    tcpSocket->connectToHost("Google.com",80);
+    tcpSocket->connectToHost("google.com",80);
 }
 
 void TcpTest::Connect(){
     // Connected
-    if(tcpSocket->waitForConnected(3000)){
+    if(tcpSocket->waitForConnected(5000)){
         qDebug() << "Connected!";
 
         // send
@@ -64,6 +64,6 @@ void TcpTest::bytesWritten(qint64 bytes){
 }
 
 void TcpTest::readyRead(){
-  qDebug() << "Reading...";
+  qDebug() << "Reading..." << tcpSocket->bytesAvailable();
   qDebug() << tcpSocket->readAll();
 }

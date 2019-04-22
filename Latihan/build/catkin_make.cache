@@ -1,0 +1,2 @@
+Tyrell
+-DCATKIN_DEVEL_PREFIX=/home/tyrell/Latihan/devel -DCMAKE_INSTALL_PREFIX=/home/tyrell/Latihan/install -G Unix Makefiles

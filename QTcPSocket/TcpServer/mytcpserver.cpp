@@ -7,8 +7,7 @@ MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
   connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
   if(!server->listen(QHostAddress::Any, 9999)){
-    qDebug() << "Server couldn't Start";
-    server->errorString();
+    qDebug() << "Server couldn't Start, " << server->errorString();
   }
   else {
     qDebug() << "Server Start";

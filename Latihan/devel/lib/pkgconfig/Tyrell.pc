@@ -1,0 +1,8 @@
+prefix=/home/tyrell/Latihan/devel
+
+Name: Tyrell
+Description: Description of Tyrell
+Version: 0.0.0
+Cflags: -I/home/tyrell/Latihan/devel/include -I/home/tyrell/Latihan/src/Tyrell/include
+Libs: -L/home/tyrell/Latihan/devel/lib -lTyrell
+Requires: roscpp rospy std_msgs

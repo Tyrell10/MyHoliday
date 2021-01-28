@@ -16,13 +16,12 @@ Dialog::~Dialog()
 
 void Dialog::paintEvent(QPaintEvent *event){
   QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing, true);
+  QPen linePen(Qt::red, 2, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
+  painter.setPen(linePen);
 
-  QPen linePen(Qt::red);
-  linePen.setWidth(5);
-  linePen.setJoinStyle(Qt::RoundJoin);
-  //linePen.setJoinStyle(Qt::MiterJoin);
   QPolygon poly;
-  QRect rec(60,50,275,200);
+  QLine line_pass(100,100,180,70);
 
   //create polygon
   poly << QPoint(150, 100);
@@ -48,6 +47,19 @@ void Dialog::paintEvent(QPaintEvent *event){
 
   auto m = painter.matrix();
   painter.setMatrix(m);
-  painter.drawEllipse(rec);
+  painter.drawLine(line_pass);
 
+}
+
+void Dialog::on_pushButton_clicked()
+{
+//    if(ui->pushButton->text()=="Green"){
+//      ui->label->setVisible(false);
+//      ui->label_2->setVisible(true);
+//      ui->pushButton->setText("Red");
+//    } else {
+//      ui->label_2->setVisible(false);
+//      ui->label->setVisible(true);
+//      ui->pushButton->setText("Green");
+//    }
 }

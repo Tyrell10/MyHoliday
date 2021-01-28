@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->KotakPesan->setReadOnly(true);
   ui->KotakPesan->setPlainText("Connecting...");
+
+  // Add default IP address
+  ui->IP->setText("127.0.0.1");
+
   // Add Port Number
   QStringList Port_List;
   Port_List.append("1234");
@@ -54,8 +58,7 @@ void MainWindow::Socket(){
                             &sender, &senderPort);
 
     ui->KotakPesan->append("Chat 2: " + QString(datagram));
-  }
-
+  }   
 }
 
 void MainWindow::on_Connect_clicked(){
@@ -63,7 +66,7 @@ void MainWindow::on_Connect_clicked(){
   //Port = ui->Port->text().toInt();
 
   //udpSocket->bind(IP,Port);
-  udpSocket->bind(QHostAddress(QHostAddress::AnyIPv4), Port, QAbstractSocket::ShareAddress | QAbstractSocket::ReuseAddressHint);
+  udpSocket->bind(QHostAddress(QHostAddress::AnyIPv4), Port, QAbstractSocket::ReuseAddressHint|QAbstractSocket::ShareAddress);
   udpSocket->joinMulticastGroup(IP);
 
   ui->KotakPesan->setPlainText("Connected");

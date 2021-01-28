@@ -8,8 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
   server = new QTcpServer(this);
 
-  ui->IP->setText("127.0.0.1"); //default IP
-  ui->Port->setText("12345");   //default Port
+  ui->IP->setText("127.0.0.2"); //default IP
+  ui->Port->setText("1233");   //default Port
 
   status = DISCONNECT;
   ui->KotakPesan->setReadOnly(true);

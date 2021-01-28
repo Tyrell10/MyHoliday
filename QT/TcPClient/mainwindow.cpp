@@ -3,21 +3,24 @@
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
+  tcpSocket(new QTcpSocket(this)),
+  tcpSocket2(new QTcpSocket(this)),
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-  tcpSocket = new QTcpSocket(this);
 
   ui->KotakPesan->setReadOnly(true);
   ui->KotakPesan->setPlainText("Connecting...");
 
   ui->IP->setText("127.0.0.1");
-  ui->Port->setText("12345");
+  ui->Port->setText("1234");
 
   connect(tcpSocket, SIGNAL(connected()), this, SLOT(connected()));
+  connect(tcpSocket2, SIGNAL(connected()), this, SLOT(connected2()));
   connect(ui->Pesan, SIGNAL(returnPressed()), this, SLOT(on_Send_clicked()));
   connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
   connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+  connect(tcpSocket2, SIGNAL(readyRead()), this, SLOT(readyRead2()));
 }
 
 MainWindow::~MainWindow()
@@ -31,17 +34,30 @@ void MainWindow::connected(){
   connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnect()));
 }
 
+void MainWindow::connected2(){
+  ui->KotakPesan->setPlainText("Connected \n");
+  connect(tcpSocket2, SIGNAL(disconnected()), this, SLOT(disconnect2()));
+}
+
 void MainWindow::readyRead(){
   if(tcpSocket->bytesAvailable())
-    ui->KotakPesan->append("Server : " + tcpSocket->readAll());
+    ui->KotakPesan->append("Server1 : " + tcpSocket->readAll());
+}
+
+void MainWindow::readyRead2(){
+  if(tcpSocket2->bytesAvailable())
+    ui->KotakPesan->append("Server2 : " + tcpSocket2->readAll());
 }
 
 void MainWindow::on_Connect_clicked(){
-  IP = ui->IP->text();
+  IP[0] = ui->IP->text();
   Port = ui->Port->text().toInt();
+  IP[1] = "127.0.0.2";
+  Port2 = 1233;
 
   if(ui->Connect->text()=="Connect" && tcpSocket->state()==QTcpSocket::UnconnectedState){
-    tcpSocket->connectToHost(IP, Port);
+    tcpSocket->connectToHost(IP[0], Port);
+    tcpSocket2->connectToHost(IP[1], Port2);
 
     if(!tcpSocket->HostLookupState){
       tcpSocket->HostNotFoundError;
@@ -57,8 +73,10 @@ void MainWindow::on_Connect_clicked(){
   }
   else if(ui->Connect->text()=="Disconnect" && tcpSocket->state()==QTcpSocket::ConnectedState){
     tcpSocket->disconnectFromHost();
+    tcpSocket2->disconnectFromHost();
     ui->Connect->setText("Connect");
     tcpSocket->disconnected();
+    tcpSocket2->disconnected();
   }
 }
 
@@ -66,6 +84,9 @@ void MainWindow::on_Send_clicked()
 {
     tcpSocket->write(ui->Pesan->text().toLatin1());
     tcpSocket->flush();
+
+    tcpSocket2->write(ui->Pesan->text().toLatin1());
+    tcpSocket2->flush();
 
     ui->Pesan->clear();
 }
@@ -100,6 +121,17 @@ void MainWindow::disconnect(){
     tcpSocket->RemoteHostClosedError;
   }
   tcpSocket->close();
+
+  ui->KotakPesan->append("Disconnected");
+}
+
+void MainWindow::disconnect2(){
+  if(ui->Connect->text() == "Disconnect"){
+    ui->Connect->setText("Connect");
+    tcpSocket2->disconnectFromHost();
+    tcpSocket2->RemoteHostClosedError;
+  }
+  tcpSocket2->close();
 
   ui->KotakPesan->append("Disconnected");
 }

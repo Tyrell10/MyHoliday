@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <QtCore>
+#include <QPainter>
+#include <QRectF>
 
 namespace Ui {
 class Dialog;
@@ -22,6 +24,8 @@ private:
 
 protected:
   void paintEvent(QPaintEvent *event);
+private slots:
+  void on_pushButton_clicked();
 };
 
 #endif // DIALOG_H

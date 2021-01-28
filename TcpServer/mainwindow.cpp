@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
   server = new QTcpServer(this);
 
   ui->IP->setText("127.0.0.1");
-  ui->Port->setText("12345");
+  ui->Port->setText("1234");
 
   status = DISCONNECT;
   ui->KotakPesan->setReadOnly(true);
@@ -49,6 +49,7 @@ void MainWindow::on_Send_clicked(){
 }
 
 void MainWindow::readData(){
+  QByteArray Data = socket->readAll();
   ui->KotakPesan->append("Client : " + socket->readAll());
 }
 

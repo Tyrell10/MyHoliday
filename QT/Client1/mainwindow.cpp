@@ -25,6 +25,7 @@ MainWindow::~MainWindow()
     delete ui;
     udpsocket->close();
 }
+
 void MainWindow::Socket(){
     while(udpsocket->hasPendingDatagrams()){
         QByteArray datagram;

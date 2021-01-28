@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-04-14T01:07:40
+# Project created by QtCreator 2019-10-17T21:08:24
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OptionFukuro
+TARGET = tabWidget
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -25,16 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        optionfukuro.cpp
+        mainwindow.cpp \
+    form.cpp
 
 HEADERS += \
-        optionfukuro.h
+        mainwindow.h \
+    form.h
 
 FORMS += \
-        optionfukuro.ui
-
-DISTFILES += \
-    lines.png \
-    ball.png \
-    fukuro.png \
-    arrow3.png
+        mainwindow.ui \
+    form.ui

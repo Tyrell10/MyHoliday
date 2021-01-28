@@ -27,7 +27,6 @@ public slots:
 
 private slots:
   void on_Connect_clicked();
-
   void on_Send_clicked();
 
 private:

@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->KotakPesan->setPlainText("Connecting...");
 
   ui->IP->setText("127.0.0.1");
-  ui->Port->setText("12345");
+  ui->Port->setText("1234");
 
   connect(tcpSocket, SIGNAL(connected()), this, SLOT(connected()));
   connect(ui->Pesan, SIGNAL(returnPressed()), this, SLOT(on_Send_clicked()));

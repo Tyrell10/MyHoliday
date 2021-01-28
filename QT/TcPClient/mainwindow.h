@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
-#include <QUdpSocket>
 #include <QAbstractSocket>
 #include <QObject>
 #include <QMessageBox>
@@ -22,9 +21,14 @@ public:
 
 public slots:
   void connected();
+  void connected2();
   void disconnect();
+  void disconnect2();
   void readyRead();
+  void readyRead2();
+  //void readData();
   void displayError(QAbstractSocket::SocketError socketError);
+  //void newConnection();
 
 private slots:
   void on_Connect_clicked();
@@ -32,9 +36,9 @@ private slots:
 
 private:
   Ui::MainWindow *ui;
-  QTcpSocket *tcpSocket;
-  QHostAddress IP;
-  quint16 Port;
+  QTcpSocket *tcpSocket, *tcpSocket2;
+  QString IP[2];
+  quint16 Port, Port2;
 };
 
 #endif // MAINWINDOW_H

@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->KotakPesan2->setReadOnly(true);
   ui->KotakPesan2->setPlainText("Connecting...");
 
+  // Add default IP address
+  ui->IP2->setText("127.0.0.1");
+
   connect(ui->Pesan2, SIGNAL(returnPressed()), this, SLOT(on_Send_clicked()));
 }
 
@@ -25,17 +28,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::Socket(){
   while(udpSocket->hasPendingDatagrams()){
-    QByteArray datagram;
-    QHostAddress sender;
-    quint16 senderPort;
+      QByteArray datagram;
+      QHostAddress sender;
+      quint16 senderPort;
 
-    datagram.resize(udpSocket->pendingDatagramSize());
-    udpSocket->readDatagram(datagram.data(), datagram.size(),
+      datagram.resize(udpSocket->pendingDatagramSize());
+      udpSocket->readDatagram(datagram.data(), datagram.size(),
                             &sender, &senderPort);
 
-    ui->KotakPesan2->append("Chat 1: " + QString(datagram));
-  }
+      ui->KotakPesan2->append("Chat 1: " + QString(datagram));
 
+  }
 }
 
 void MainWindow::on_Connect_clicked(){
@@ -43,7 +46,7 @@ void MainWindow::on_Connect_clicked(){
   Port = ui->Port2->text().toInt();
 
   //udpSocket->bind(IP,Port);
-  udpSocket->bind(QHostAddress(QHostAddress::AnyIPv4), Port, QAbstractSocket::ShareAddress);
+  udpSocket->bind(QHostAddress(QHostAddress::AnyIPv4), Port, QAbstractSocket::ReuseAddressHint|QAbstractSocket::ShareAddress);
   udpSocket->joinMulticastGroup(IP);
 
   ui->KotakPesan2->setPlainText("Connected");
